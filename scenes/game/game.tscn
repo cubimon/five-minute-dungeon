@@ -1,0 +1,13 @@
+[gd_scene format=3 uid="uid://cy6t0fqyrsotq"]
+
+[ext_resource type="Script" uid="uid://cq6g5o1hmoiep" path="res://scenes/game/game.gd" id="1_sul5r"]
+
+[node name="Game" type="Node2D" unique_id=1991018880]
+script = ExtResource("1_sul5r")
+
+[node name="Timer" type="Label" parent="." unique_id=867177805]
+offset_left = 1017.0
+offset_top = 17.0
+offset_right = 1132.0
+offset_bottom = 43.0
+text = "Timer: 5 min"

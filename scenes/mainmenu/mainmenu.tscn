@@ -1,0 +1,54 @@
+[gd_scene format=3 uid="uid://c6pfcmt7uokq8"]
+
+[ext_resource type="Script" uid="uid://huyfx30awkty" path="res://scenes/mainmenu/mainmenu.gd" id="1_5mbse"]
+
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_xyqql"]
+content_margin_left = 10.0
+content_margin_top = 10.0
+content_margin_right = 10.0
+content_margin_bottom = 10.0
+
+[sub_resource type="Theme" id="Theme_1css7"]
+default_font_size = 34
+Button/styles/disabled = null
+Button/styles/focus = null
+Button/styles/hover = null
+Button/styles/normal = SubResource("StyleBoxEmpty_xyqql")
+Button/styles/pressed = null
+VBoxContainer/constants/separation = 25
+
+[sub_resource type="Theme" id="Theme_wmp6b"]
+
+[node name="Mainmenu" type="Control" unique_id=261948194]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = SubResource("Theme_1css7")
+script = ExtResource("1_5mbse")
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=1228753675]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=1617643265]
+layout_mode = 2
+
+[node name="Start" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1665366535]
+layout_mode = 2
+theme = SubResource("Theme_wmp6b")
+text = "Start"
+
+[node name="Join" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1810631111]
+layout_mode = 2
+text = "Join"
+
+[node name="Create" type="Button" parent="CenterContainer/VBoxContainer" unique_id=1104990855]
+layout_mode = 2
+text = "Create"

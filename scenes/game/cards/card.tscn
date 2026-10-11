@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://crq8kha8vc0nk"]
+
+[ext_resource type="Script" uid="uid://c33yw3j27sl6y" path="res://scenes/game/cards/card.gd" id="1_bq3w6"]
+
+[node name="Card" type="Node2D" unique_id=546861362]
+script = ExtResource("1_bq3w6")
+
+[node name="Panel" type="Panel" parent="." unique_id=234040757]
+offset_right = 92.0
+offset_bottom = 146.0
+metadata/_edit_use_anchors_ = true
+
+[node name="Sprite2D" type="Sprite2D" parent="Panel" unique_id=819121943]
+
+[node name="Label" type="Label" parent="Panel" unique_id=355846517]
+layout_mode = 0
+offset_left = 7.0
+offset_top = 53.0
+offset_right = 80.0
+offset_bottom = 76.0
+text = "unknown"
