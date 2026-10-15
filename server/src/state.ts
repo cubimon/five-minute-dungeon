@@ -136,7 +136,13 @@ export class GameState extends Schema {
   @type("string") status: string = GameStatus.LOBBY;
   @type(Enemy) currentEnemy: Enemy | null = null;
   @type("number") enemiesBeaten: number = 0;
+  @type("number") startTime: number = 0;
 
   enemiesToWin: number = 10;
   maxHandCards: number = 5;
+  gameDuration: number = 5 * 60 * 1000;
+
+  isTimeOver(): boolean {
+	return Date.now() - this.startTime > this.gameDuration;
+  }
 }

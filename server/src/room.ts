@@ -64,6 +64,7 @@ export class GameRoom extends Room {
       return;
     }
     player.selectHero(hero);
+    player.isReady = false;
   }
 
   setPlayerName(client: Client, message: { name: string }) {
@@ -73,9 +74,14 @@ export class GameRoom extends Room {
       return;
     }
     player.name = message.name;
+    player.isReady = false;
   }
 
   private playCard(client: Client, message: { id: number }) {
+    if (this.state.isTimeOver()) {
+      console.error("Game time is over");
+      return;
+    }
     const enemy = this.state.currentEnemy;
     if (!enemy || this.state.status !== GameStatus.PLAYING) {
       console.error("Can't play cards while not PLAYING state");
@@ -107,6 +113,10 @@ export class GameRoom extends Room {
   }
 
   private draw(client: Client) {
+    if (this.state.isTimeOver()) {
+      console.error("Game time is over");
+      return;
+    }
     const player = this.state.players.get(client.sessionId);
     if (!player) {
       console.error("No player assigned to session");
@@ -133,6 +143,7 @@ export class GameRoom extends Room {
     this.state.status = GameStatus.PLAYING;
     await this.lock();
     this.spawnEnemy();
+    this.state.startTime = Date.now();
     this.broadcast("game_start");
   }
 
