@@ -1,5 +1,5 @@
-import { defineRoom, defineServer, LobbyRoom } from "colyseus";
-import { GameRoom } from "./rooms/game_room";
+import { defineRoom, defineServer } from "colyseus";
+import { GameRoom } from "./room";
 
 const port = Number.parseInt(process.env.PORT || "2567", 10);
 
