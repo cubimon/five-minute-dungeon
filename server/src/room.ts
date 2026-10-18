@@ -134,7 +134,11 @@ export class GameRoom extends Room {
       console.error(`Player ${player.name} can't draw more than ${maxHandCards} cards`);
       return;
     }
-    player.drawCard();
+    const drawnCard = player.drawCard();
+    if (drawnCard) {
+      console.log(`Drawn card ${drawnCard.type}`);
+      client.send("drawn_card", drawnCard);
+    }
   }
 
   private async checkAllPlayersReady() {

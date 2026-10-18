@@ -1,21 +1,10 @@
 [gd_scene format=3 uid="uid://dw0vhwn7r0q2n"]
 
+[ext_resource type="PackedScene" uid="uid://crq8kha8vc0nk" path="res://scenes/game/cards/card.tscn" id="1_1t2yy"]
 [ext_resource type="Script" uid="uid://csebfxtajccjt" path="res://scenes/game/cardstack.gd" id="1_fcue1"]
 
-[node name="Cardstack" type="Panel" unique_id=1097538489]
+[node name="Card" unique_id=1097538489 instance=ExtResource("1_1t2yy")]
 script = ExtResource("1_fcue1")
 
-[node name="Label" type="Label" parent="." unique_id=949874578]
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_top = 68.5
-offset_right = 100.0
-offset_bottom = 91.5
-grow_horizontal = 2
-grow_vertical = 2
-text = "stack"
-horizontal_alignment = 1
+[node name="Label" parent="." index="1" unique_id=355846517]
+text = "Cardstack"

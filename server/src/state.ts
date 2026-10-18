@@ -77,13 +77,14 @@ export class Player extends Schema {
     this.handCards.splice(index, 1);
   }
 
-  drawCard() {
+  drawCard(): CardId | undefined {
     if (this.poolCards.length == 0) {
       return;
     }
     const drawnCard = this.poolCards.pop();
     if (drawnCard) {
       this.handCards.push(drawnCard);
+      return drawnCard;
     }
   }
 }

@@ -1,2 +1,3 @@
-class_name CardStack
-extends Node2D
+extends "res://scenes/game/cards/card.gd"
+
+@onready var label: Label = $Label
