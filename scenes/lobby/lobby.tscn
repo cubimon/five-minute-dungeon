@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://cqib46pbijvbq"]
+
+[ext_resource type="Script" uid="uid://mwtob061icv8" path="res://scenes/lobby/lobby.gd" id="1_1ig7j"]
+
+[node name="Lobby" type="Control" unique_id=975873015]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_1ig7j")
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=2045629640]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer" unique_id=1751204769]
+layout_mode = 2
+
+[node name="RoomLabel" type="Label" parent="CenterContainer/VBoxContainer" unique_id=1055597540]
+layout_mode = 2
+
+[node name="PlayerList" type="GridContainer" parent="CenterContainer/VBoxContainer" unique_id=538860775]
+layout_mode = 2
+columns = 3
