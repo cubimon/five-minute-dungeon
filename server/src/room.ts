@@ -12,9 +12,9 @@ export class GameRoom extends Room {
     this.state.status = GameStatus.LOBBY;
 
     // code
-    const roomCode = options.room_code || this.generateRandomCode(4);
-    await this.setMetadata({ room_code: roomCode });
-    console.log(`Game room created with code: ${options.room_code}`);
+    this.state.roomCode = options.room_code || this.generateRandomCode(4);
+    await this.setMetadata({ room_code: this.state.roomCode });
+    console.log(`Game room created with code: ${this.state.roomCode}`);
 
     // messages
     this.onMessage("set_ready", this.setReady.bind(this));
@@ -32,7 +32,7 @@ export class GameRoom extends Room {
     }
     console.log(`Client ${client.sessionId} joined`);
     const player = new Player();
-    player.isReady = false;
+    player.name = `Player #${this.state.players.size}`;
     this.state.players.set(client.sessionId, player);
   }
 
@@ -60,11 +60,13 @@ export class GameRoom extends Room {
     }
     const hero = HEROES_MAP[message.name];
     if (!hero) {
-      console.error("Unknown hero name");
+      console.error(`Unknown hero name ${message.name}`);
       return;
     }
+    console.log(`Player ${client.sessionId} selected ${message.name}`);
     player.selectHero(hero);
     player.isReady = false;
+    console.log(player.isReady);
   }
 
   setPlayerName(client: Client, message: { name: string }) {
@@ -73,6 +75,7 @@ export class GameRoom extends Room {
       console.error("No player assigned to session");
       return;
     }
+    console.log(`Player ${client.sessionId} set name to ${message.name}`);
     player.name = message.name;
     player.isReady = false;
   }
@@ -131,7 +134,15 @@ export class GameRoom extends Room {
 
   private async checkAllPlayersReady() {
     let allReady = true;
-    this.state.players.forEach(player => allReady = allReady && player.isReady);
+    this.state.players.forEach(player => allReady = allReady && player.isReadyAndSet());
+    const usedNames = new Set();
+    for (const player of this.state.players.values()) {
+      if (usedNames.has(player.name)) {
+        console.log("Player names must be unique");
+        return;
+      }
+      usedNames.add(player.name);
+    }
     if (allReady && this.state.players.size > 0) {
       console.log("Everyone is ready");
       await this.startGame();
@@ -139,12 +150,11 @@ export class GameRoom extends Room {
   }
 
   private async startGame() {
-    console.log("Alle Spieler sind bereit! Starte das Spiel...");
+    console.log("All players ready, starting game now...");
     this.state.status = GameStatus.PLAYING;
     await this.lock();
     this.spawnEnemy();
     this.state.startTime = Date.now();
-    this.broadcast("game_start");
   }
 
   private spawnEnemy() {

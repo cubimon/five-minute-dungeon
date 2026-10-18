@@ -1,5 +1,6 @@
 import { ArraySchema, MapSchema, Schema, type } from "@colyseus/schema";
 import { CardType, GameStatus, ICardCount, IEnemy, IHero } from "./types";
+import { HEROES_MAP } from "./data";
 
 export class CardId extends Schema {
   @type("number") id: number = 0;
@@ -15,16 +16,23 @@ export class CardId extends Schema {
 export class Player extends Schema {
   @type("boolean") isReady: boolean = false;
   @type("string") name: string = "";
+  @type("string") hero: string = "";
   @type([CardId]) handCards = new ArraySchema<CardId>();
 
   poolCards: CardId[] = [];
   usedCards: CardId[] = [];
 
+  constructor() {
+    super();
+    this.selectHero(HEROES_MAP["Mage"]);
+  }
+
   isReadyAndSet() {
-	return this.isReady && this.name.length > 0 && this.poolCards.length > 0;
+    return this.isReady && this.name.length > 0 && this.poolCards.length > 0;
   }
 
   selectHero(hero: IHero) {
+    this.hero = hero.name;
     this.poolCards = new ArraySchema<CardId>();
     let nextId = 0;
     for (const cardCount of hero.cardCounts) {
@@ -132,6 +140,7 @@ export class Enemy extends Schema {
 }
 
 export class GameState extends Schema {
+  @type("string") roomCode: string = "";
   @type({ map: Player }) players = new MapSchema<Player>();
   @type("string") status: string = GameStatus.LOBBY;
   @type(Enemy) currentEnemy: Enemy | null = null;

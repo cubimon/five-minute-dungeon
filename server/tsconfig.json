@@ -4,6 +4,7 @@
     "module": "es2022",
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
+    "useDefineForClassFields": false,
     "strict": true
   }
 }
