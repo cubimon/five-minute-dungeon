@@ -101,7 +101,12 @@ export class GameRoom extends Room {
       return;
     }
     if (enemy.play(handCard.type as CardType)) {
+      console.log(`Player ${player.name} played ${handCard.type}`);
       player.playedHandCard(handCard);
+      client.send("played_card", message);
+      client.send("updated_enemy", this.state.currentEnemy);
+    } else {
+      console.log(`Player ${player.name} played illegal card ${handCard.type}`);
     }
     if (enemy.isDefeated()) {
       console.log(`Enemy ${enemy.name} defeated!`);

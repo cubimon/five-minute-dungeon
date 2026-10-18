@@ -1,0 +1,7 @@
+[gd_scene format=3 uid="uid://76it6f3xesq0"]
+
+[ext_resource type="PackedScene" uid="uid://crq8kha8vc0nk" path="res://scenes/game/cards/card.tscn" id="1_1t2yy"]
+[ext_resource type="Script" uid="uid://ctccm0urkkrve" path="res://scenes/game/enemy.gd" id="2_oo557"]
+
+[node name="Card" unique_id=228351307 instance=ExtResource("1_1t2yy")]
+script = ExtResource("2_oo557")

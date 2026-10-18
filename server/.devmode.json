@@ -2,9 +2,7 @@
   "data": {},
   "hash": {
     "roomcount": {},
-    "roomhistory": {
-      "EjyjAaNk9": "{\"clientOptions\":{},\"roomName\":\"game_room\",\"processId\":\"UdGZLf06P\",\"state\":\"{\\\"roomCode\\\":\\\"W0RQ\\\",\\\"players\\\":{\\\"_GSsP2URN\\\":{\\\"isReady\\\":true,\\\"name\\\":\\\"Player #0\\\",\\\"hero\\\":\\\"Mage\\\",\\\"handCards\\\":[]}},\\\"status\\\":\\\"PLAYING\\\",\\\"enemiesBeaten\\\":0,\\\"startTime\\\":0}\",\"nextRefId\":4,\"clients\":[{\"sessionId\":\"_GSsP2URN\",\"reconnectionToken\":\"jdNB1tQyg\"}]}"
-    }
+    "roomhistory": {}
   },
   "keys": {}
 }
