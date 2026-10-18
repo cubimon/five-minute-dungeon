@@ -2,20 +2,34 @@
 
 [ext_resource type="Script" uid="uid://c33yw3j27sl6y" path="res://scenes/game/cards/card.gd" id="1_bq3w6"]
 
-[node name="Card" type="Node2D" unique_id=546861362]
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nq1oy"]
+bg_color = Color(0.1882353, 0.1882353, 0.1882353, 1)
+
+[sub_resource type="Theme" id="Theme_bq3w6"]
+Panel/styles/panel = SubResource("StyleBoxFlat_nq1oy")
+
+[node name="Card" type="TextureButton" unique_id=228351307]
+custom_minimum_size = Vector2(100, 160)
+offset_right = 100.0
+offset_bottom = 160.0
+theme = SubResource("Theme_bq3w6")
 script = ExtResource("1_bq3w6")
 
-[node name="Panel" type="Panel" parent="." unique_id=234040757]
-offset_right = 92.0
-offset_bottom = 146.0
-metadata/_edit_use_anchors_ = true
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=819121943]
+position = Vector2(0, -160)
 
-[node name="Sprite2D" type="Sprite2D" parent="Panel" unique_id=819121943]
-
-[node name="Label" type="Label" parent="Panel" unique_id=355846517]
-layout_mode = 0
-offset_left = 7.0
-offset_top = 53.0
-offset_right = 80.0
-offset_bottom = 76.0
+[node name="Label" type="Label" parent="." unique_id=355846517]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -36.5
+offset_top = -11.5
+offset_right = 36.5
+offset_bottom = 11.5
+grow_horizontal = 2
+grow_vertical = 2
 text = "unknown"
+horizontal_alignment = 1

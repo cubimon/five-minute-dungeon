@@ -2,6 +2,11 @@ import { ArraySchema, MapSchema, Schema, type } from "@colyseus/schema";
 import { CardType, GameStatus, ICardCount, IEnemy, IHero } from "./types";
 import { HEROES_MAP } from "./data";
 
+
+export const enemiesToWin: number = 10;
+export const maxHandCards: number = 5;
+export const gameDuration: number = 5 * 60 * 1000;
+
 export class CardId extends Schema {
   @type("number") id: number = 0;
   @type("string") type: string = "";
@@ -28,18 +33,30 @@ export class Player extends Schema {
   }
 
   isReadyAndSet() {
-    return this.isReady && this.name.length > 0 && this.poolCards.length > 0;
+    return this.isReady && this.name.length > 0 && this.hero in HEROES_MAP;
   }
 
   selectHero(hero: IHero) {
     this.hero = hero.name;
-    this.poolCards = new ArraySchema<CardId>();
+  }
+
+  prepareCards() {
+    const hero = HEROES_MAP[this.hero];
+    if (!hero) {
+      console.error(`Illegal hero name ${this.hero}`);
+      return;
+    }
+    this.poolCards = [];
     let nextId = 0;
     for (const cardCount of hero.cardCounts) {
       for (let i = 0; i < cardCount.count; i++) {
         this.poolCards.push(new CardId(nextId, cardCount.type));
         nextId += 1;
       }
+    }
+    shuffleArray(this.poolCards);
+    for (let i = 0; i < maxHandCards; i++) {
+      this.drawCard();
     }
   }
 
@@ -147,11 +164,15 @@ export class GameState extends Schema {
   @type("number") enemiesBeaten: number = 0;
   @type("number") startTime: number = 0;
 
-  enemiesToWin: number = 10;
-  maxHandCards: number = 5;
-  gameDuration: number = 5 * 60 * 1000;
-
   isTimeOver(): boolean {
-	return Date.now() - this.startTime > this.gameDuration;
+    return Date.now() - this.startTime > gameDuration;
   }
+}
+
+function shuffleArray<T>(array: T[]): T[] {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]]; // Swap elements
+  }
+  return array;
 }

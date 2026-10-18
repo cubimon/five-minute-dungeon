@@ -2,17 +2,20 @@
 
 [ext_resource type="Script" uid="uid://csebfxtajccjt" path="res://scenes/game/cardstack.gd" id="1_fcue1"]
 
-[node name="Cardstack" type="Node2D" unique_id=176478545]
+[node name="Cardstack" type="Panel" unique_id=1097538489]
 script = ExtResource("1_fcue1")
 
-[node name="Panel" type="Panel" parent="." unique_id=145967218]
-offset_right = 133.0
-offset_bottom = 196.0
-
-[node name="Label" type="Label" parent="Panel" unique_id=949874578]
-layout_mode = 0
-offset_left = 13.0
-offset_top = 74.0
-offset_right = 113.0
-offset_bottom = 122.0
+[node name="Label" type="Label" parent="." unique_id=949874578]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_top = 68.5
+offset_right = 100.0
+offset_bottom = 91.5
+grow_horizontal = 2
+grow_vertical = 2
 text = "stack"
+horizontal_alignment = 1

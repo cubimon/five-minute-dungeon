@@ -1,15 +1,35 @@
-extends Node2D
+extends Control
 
 const CardStack = preload("res://scenes/game/cardstack.tscn")
 
-var hand = []
-var available_cards: CardStack = null
-var used_cards: CardStack = null
+@onready var hand_cards: HBoxContainer = $HandCards
+
+var hand_card_ui_nodes = {}
 
 func _ready() -> void:
-	available_cards = CardStack.instantiate()
-	for i in range(5):
-		var card = CardFactory.create_card(CardFactory.CardType.ATTACK)
-		available_cards.push_card(card)
-	available_cards.shuffle()
-	used_cards = CardStack.instantiate()
+	var session_id = NetworkManager.room.get_session_id()
+	var player = NetworkManager.room.state.players[session_id]
+	for hand_card in player.handCards:
+		print("Adding handcard ", hand_card)
+		var card = CardFactory.create_card(hand_card.type)
+		card.pressed.connect(_on_hand_card_pressed.bind(hand_card))
+		hand_cards.add_child(card)
+		hand_card_ui_nodes[hand_card.id] = card
+	NetworkManager.callbacks.on_add(player, "handCards", _add_hand_card)
+	NetworkManager.callbacks.on_remove(player, "handCards", _remove_hand_card)
+
+func _add_hand_card(hand_card) -> void:
+	print("Adding handcard ", hand_card)
+	var card = CardFactory.create_card(hand_card.type)
+	hand_cards.add_child(card)
+	hand_card_ui_nodes[hand_card.id] = card
+
+func _remove_hand_card(hand_card) -> void:
+	print("Removing handcard ", hand_card)
+	if hand_card_ui_nodes.has(hand_card.id):
+		hand_card_ui_nodes[hand_card.id].queue_free()
+	hand_card_ui_nodes.erase(hand_card.id)
+
+func _on_hand_card_pressed(hand_card) -> void:
+	# TODO: play
+	print("Hand card pressed ", hand_card)

@@ -1,6 +1,6 @@
 import { Room, Client } from "colyseus";
 import * as crypto from "node:crypto";
-import { Enemy, GameState, Player } from "./state";
+import { Enemy, GameState, Player, enemiesToWin, maxHandCards } from "./state";
 import { CardType, GameStatus } from "./types";
 import { ENEMY_TEMPLATES, HEROES_MAP } from "./data";
  
@@ -107,7 +107,7 @@ export class GameRoom extends Room {
       console.log(`Enemy ${enemy.name} defeated!`);
       this.state.currentEnemy = null;
       this.state.enemiesBeaten += 1;
-      if (this.state.enemiesBeaten < this.state.enemiesToWin) {
+      if (this.state.enemiesBeaten < enemiesToWin) {
         this.spawnEnemy();
       } else {
         console.log("All enemies defeated");
@@ -125,8 +125,8 @@ export class GameRoom extends Room {
       console.error("No player assigned to session");
       return;
     }
-    if (player.handCards.length >= this.state.maxHandCards) {
-      console.error(`Player ${player.name} can't draw more than ${this.state.maxHandCards} cards`);
+    if (player.handCards.length >= maxHandCards) {
+      console.error(`Player ${player.name} can't draw more than ${maxHandCards} cards`);
       return;
     }
     player.drawCard();
@@ -152,6 +152,7 @@ export class GameRoom extends Room {
   private async startGame() {
     console.log("All players ready, starting game now...");
     this.state.status = GameStatus.PLAYING;
+    this.state.players.forEach(player => player.prepareCards());
     await this.lock();
     this.spawnEnemy();
     this.state.startTime = Date.now();
