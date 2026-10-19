@@ -12,8 +12,6 @@ var hand_card_ui_nodes = {}
 var enemy
 
 func _ready() -> void:
-	pool_cards.label.text = "Draw"
-	used_cards.label.text = "Used cards"
 	pool_cards.pressed.connect(_on_draw_pressed)
 	var session_id = NetworkManager.room.get_session_id()
 	var player = NetworkManager.room.state.players[session_id]

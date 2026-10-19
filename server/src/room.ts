@@ -22,6 +22,7 @@ export class GameRoom extends Room {
     this.onMessage("set_player_name", this.setPlayerName.bind(this));
     this.onMessage("play_card", this.playCard.bind(this));
     this.onMessage("draw", this.draw.bind(this));
+    this.onMessage("special", this.special.bind(this));
   }
 
   onJoin(client: Client, options: unknown) {
@@ -42,6 +43,10 @@ export class GameRoom extends Room {
   }
 
   private async setReady(client: Client, isReady: boolean) {
+    if (this.state.status !== GameStatus.LOBBY) {
+      console.error("Can't change ready state outside LOBBY");
+      return;
+    }
     const player = this.state.players.get(client.sessionId);
     if (!player) {
       console.error("No player assigned to session");
@@ -53,6 +58,10 @@ export class GameRoom extends Room {
   }
 
   private selectHero(client: Client, message: { name: string }) {
+    if (this.state.status !== GameStatus.LOBBY) {
+      console.error("Can't change hero outside LOBBY");
+      return;
+    }
     const player = this.state.players.get(client.sessionId);
     if (!player) {
       console.error("No player assigned to session");
@@ -70,6 +79,10 @@ export class GameRoom extends Room {
   }
 
   setPlayerName(client: Client, message: { name: string }) {
+    if (this.state.status !== GameStatus.LOBBY) {
+      console.error("Can't change playername outside LOBBY");
+      return;
+    }
     const player = this.state.players.get(client.sessionId);
     if (!player) {
       console.error("No player assigned to session");
@@ -81,6 +94,10 @@ export class GameRoom extends Room {
   }
 
   private playCard(client: Client, message: { id: number }) {
+    if (this.state.status !== GameStatus.PLAYING) {
+      console.error("Can't play cards outside PLAYING state");
+      return;
+    }
     if (this.state.isTimeOver()) {
       console.error("Game time is over");
       return;
@@ -115,12 +132,18 @@ export class GameRoom extends Room {
       if (this.state.enemiesBeaten < enemiesToWin) {
         this.spawnEnemy();
       } else {
-        console.log("All enemies defeated");
+        console.log("Game over - all enemies defeated");
+        this.state.status = GameStatus.FINISHED;
+        this.broadcast("game_over");
       }
     }
   }
 
   private draw(client: Client) {
+    if (this.state.status !== GameStatus.PLAYING) {
+      console.error("Can't draw card outside PLAYING state");
+      return;
+    }
     if (this.state.isTimeOver()) {
       console.error("Game time is over");
       return;
@@ -139,6 +162,23 @@ export class GameRoom extends Room {
       console.log(`Drawn card ${drawnCard.type}`);
       client.send("drawn_card", drawnCard);
     }
+  }
+
+  private special(client: Client) {
+    if (this.state.status !== GameStatus.PLAYING) {
+      console.error("Can't activate special outside PLAYING state");
+      return;
+    }
+    if (this.state.isTimeOver()) {
+      console.error("Game time is over");
+      return;
+    }
+    const player = this.state.players.get(client.sessionId);
+    if (!player) {
+      console.error("No player assigned to session");
+      return;
+    }
+    player.special(this.state);
   }
 
   private async checkAllPlayersReady() {
@@ -165,6 +205,19 @@ export class GameRoom extends Room {
     await this.lock();
     this.spawnEnemy();
     this.state.startTime = Date.now();
+    setInterval(this.tick.bind(this), 1000);
+  }
+
+  private tick() {
+    if (!this.state.frozen) {
+      this.state.elapsedTime += 1000;
+    }
+    if (this.state.status === GameStatus.PLAYING
+        && this.state.isTimeOver()) {
+      console.log("Game is over - time ran out");
+      this.state.status = GameStatus.FINISHED;
+      this.broadcast("game_over");
+    }
   }
 
   private spawnEnemy() {

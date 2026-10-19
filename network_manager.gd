@@ -9,7 +9,7 @@ func connect_to_server() -> void:
 
 func create_room() -> void:
 	if room:
-		await room.leave()
+		room.leave()
 	room = await client.join_or_create("game_room")
 	callbacks = Colyseus.Callbacks.of(room)
 	
@@ -19,4 +19,4 @@ func join_room(code) -> void:
 
 func leave_room() -> void:
 	if room:
-		await room.leave()
+		room.leave()

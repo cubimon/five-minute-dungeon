@@ -1,8 +1,9 @@
-[gd_scene format=3 uid="uid://bnlxx6bokjfak"]
+[gd_scene format=3 uid="uid://bx0nsihun03rn"]
 
 [ext_resource type="PackedScene" uid="uid://crq8kha8vc0nk" path="res://scenes/game/cards/card.tscn" id="1_6cw85"]
 
-[node name="Card" unique_id=546861362 instance=ExtResource("1_6cw85")]
+[node name="Card" unique_id=228351307 instance=ExtResource("1_6cw85")]
+card_text = "Shield"
 
-[node name="Label" parent="Panel" parent_id_path=PackedInt32Array(234040757) index="1" unique_id=355846517]
-text = "shield"
+[node name="Label" parent="." index="1" unique_id=355846517]
+text = "Shield"

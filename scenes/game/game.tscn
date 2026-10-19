@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cq6g5o1hmoiep" path="res://scenes/game/game.gd" id="1_sul5r"]
 [ext_resource type="PackedScene" uid="uid://dw0vhwn7r0q2n" path="res://scenes/game/cardstack.tscn" id="2_7h61r"]
+[ext_resource type="PackedScene" uid="uid://crq8kha8vc0nk" path="res://scenes/game/cards/card.tscn" id="3_0sr1o"]
 
 [node name="Game" type="Control" unique_id=827846797]
 layout_mode = 3
@@ -53,6 +54,23 @@ grow_vertical = 0
 
 [node name="PoolCards" parent="CardStacks" unique_id=776561180 instance=ExtResource("2_7h61r")]
 layout_mode = 2
+card_text = "Draw"
 
 [node name="UsedCards" parent="CardStacks" unique_id=1097538489 instance=ExtResource("2_7h61r")]
 layout_mode = 2
+card_text = "Graveyard"
+
+[node name="SpecialCard" parent="." unique_id=228351307 instance=ExtResource("3_0sr1o")]
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -100.0
+offset_top = -160.0
+offset_right = 0.0
+offset_bottom = 0.0
+grow_horizontal = 0
+grow_vertical = 0
+card_text = "Special"

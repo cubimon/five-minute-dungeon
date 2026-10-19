@@ -38,7 +38,7 @@ func _add_client_player(player, session_id) -> void:
 	ready_check_box.text = "ready"
 	ready_check_box.toggled.connect(_on_ready_changed)
 	player_list.add_child(ready_check_box)
-	NetworkManager.callbacks.listen(player, "isReady", func(is_ready, prev):
+	NetworkManager.callbacks.listen(player, "isReady", func(is_ready, _prev):
 		print("Client player ready changed ", is_ready)
 		ready_check_box.button_pressed = is_ready
 	)
@@ -51,15 +51,15 @@ func _add_other_player(player, session_id) -> void:
 	var hero_label = Label.new()
 	hero_label.text = player.hero
 	player_list.add_child(hero_label)
-	var ready_check_box = CheckBox.new()
-	player_list.add_child(ready_check_box)
-	NetworkManager.callbacks.listen(player, "isReady", func(is_ready, prev):
+	var player_ready_check_box = CheckBox.new()
+	player_list.add_child(player_ready_check_box)
+	NetworkManager.callbacks.listen(player, "isReady", func(is_ready, _prev):
 		print("Other player ready changed ", is_ready)
-		ready_check_box.button_pressed = is_ready
+		player_ready_check_box.button_pressed = is_ready
 	)
-	player_ui_nodes[session_id] = [name_label, hero_label, ready_check_box]
+	player_ui_nodes[session_id] = [name_label, hero_label, player_ready_check_box]
 
-func _remove_player(player, session_id) -> void:
+func _remove_player(_player, session_id) -> void:
 	if player_ui_nodes.has(session_id):
 		for ui_element in player_ui_nodes[session_id]:
 			ui_element.queue_free()

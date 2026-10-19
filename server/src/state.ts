@@ -38,6 +38,14 @@ export class Player extends Schema {
 
   selectHero(hero: IHero) {
     this.hero = hero.name;
+    switch(this.hero) {
+      case "Warrior":
+        this.special = this.warriorSpecial.bind(this);
+        break;
+      case "Mage":
+        this.special = this.mageSpecial.bind(this);
+        break;
+    }
   }
 
   prepareCards() {
@@ -86,6 +94,18 @@ export class Player extends Schema {
       this.handCards.push(drawnCard);
       return drawnCard;
     }
+  }
+
+  special(state: GameState) {
+    console.warn("Empty special");
+  }
+
+  private mageSpecial(state: GameState) {
+    console.log("Freezing time");
+  }
+
+  private warriorSpecial(state: GameState) {
+    console.log("Megaattack");
   }
 }
 
@@ -164,9 +184,11 @@ export class GameState extends Schema {
   @type(Enemy) currentEnemy: Enemy | null = null;
   @type("number") enemiesBeaten: number = 0;
   @type("number") startTime: number = 0;
+  @type("number") elapsedTime: number = 0;
+  @type("boolean") frozen: boolean = false;
 
   isTimeOver(): boolean {
-    return Date.now() - this.startTime > gameDuration;
+    return this.elapsedTime > gameDuration;
   }
 }
 
