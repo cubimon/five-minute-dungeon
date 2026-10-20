@@ -118,6 +118,11 @@ export class GameRoom extends Room {
       return;
     }
     if (enemy.play(handCard.type as CardType)) {
+      if (this.state.frozen) {
+        console.log("Enemy damaged -> unfrozen");
+        this.state.frozen = false;
+        this.broadcast("unfrozen");
+      }
       console.log(`Player ${player.name} played ${handCard.type}`);
       player.playedHandCard(handCard);
       client.send("played_card", message);
@@ -178,7 +183,7 @@ export class GameRoom extends Room {
       console.error("No player assigned to session");
       return;
     }
-    player.special(this.state);
+    player.special(this);
   }
 
   private async checkAllPlayersReady() {

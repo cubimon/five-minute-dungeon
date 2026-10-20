@@ -1,6 +1,7 @@
 import { ArraySchema, MapSchema, Schema, type } from "@colyseus/schema";
 import { CardType, GameStatus, ICardCount, IEnemy, IHero } from "./types";
 import { HEROES_MAP } from "./data";
+import type { GameRoom } from "./room";
 
 
 export const enemiesToWin: number = 10;
@@ -96,15 +97,17 @@ export class Player extends Schema {
     }
   }
 
-  special(state: GameState) {
+  special(room: GameRoom) {
     console.warn("Empty special");
   }
 
-  private mageSpecial(state: GameState) {
+  private mageSpecial(room: GameRoom) {
     console.log("Freezing time");
+    room.state.frozen = true;
+    room.broadcast("frozen");
   }
 
-  private warriorSpecial(state: GameState) {
+  private warriorSpecial(room: GameRoom) {
     console.log("Megaattack");
   }
 }

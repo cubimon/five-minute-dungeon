@@ -13,7 +13,7 @@ const Enemy = preload("res://scenes/game/enemy.tscn")
 
 var hand_card_ui_nodes = {}
 var enemy
-var total_seconds = 5
+var total_seconds = 5*60
 var time_left: int
 var game_over = false
 
@@ -29,9 +29,11 @@ func _ready() -> void:
 	enemies.add_child(enemy)
 	enemy.setup(current_enemy)
 	special_card.pressed.connect(_on_special_pressed)
+	# timer
 	time_left = total_seconds
 	timer.timeout.connect(_on_timeout)
 	update_label()
+	NetworkManager.room.state_changed.connect(_state_changed)
 
 func _message_received(type, message) -> void:
 	print("Message received: ", type)
@@ -43,6 +45,14 @@ func _message_received(type, message) -> void:
 		enemy.setup(message)
 	if type == "drawn_card":
 		_add_hand_card(message)
+	if type == "frozen":
+		print("frozen")
+		timer.stop()
+	if type == "unfrozen":
+		print("unfrozen")
+		timer.start()
+	if type == "game_over":
+		game_over = true
 
 func _on_draw_pressed() -> void:
 	print("Draw card pressed")
@@ -87,14 +97,11 @@ func _on_timeout() -> void:
 func update_label() -> void:
 	timer_label.text = "Time: " + str(time_left) + "s"
 
-func pause_timer() -> void:
-	timer.paused = true
-
-func resume_timer() -> void:
-	timer.paused = false
-
 func reset_timer(new_time: int = total_seconds) -> void:
 	timer.stop()
 	time_left = new_time
 	update_label()
 	timer.start()
+
+func _state_changed() -> void:
+	print("State changed")
