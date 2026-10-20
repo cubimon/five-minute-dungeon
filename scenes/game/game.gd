@@ -7,9 +7,15 @@ const Enemy = preload("res://scenes/game/enemy.tscn")
 @onready var used_cards = $CardStacks/UsedCards
 @onready var hand_cards: HBoxContainer = $HandCards
 @onready var enemies: HBoxContainer = $Enemies
+@onready var special_card = $SpecialCard
+@onready var timer_label: Label = $TimerLabel
+@onready var timer: Timer = $Timer
 
 var hand_card_ui_nodes = {}
 var enemy
+var total_seconds = 5
+var time_left: int
+var game_over = false
 
 func _ready() -> void:
 	pool_cards.pressed.connect(_on_draw_pressed)
@@ -22,6 +28,10 @@ func _ready() -> void:
 	enemy = Enemy.instantiate()
 	enemies.add_child(enemy)
 	enemy.setup(current_enemy)
+	special_card.pressed.connect(_on_special_pressed)
+	time_left = total_seconds
+	timer.timeout.connect(_on_timeout)
+	update_label()
 
 func _message_received(type, message) -> void:
 	print("Message received: ", type)
@@ -36,6 +46,8 @@ func _message_received(type, message) -> void:
 
 func _on_draw_pressed() -> void:
 	print("Draw card pressed")
+	if game_over:
+		return
 	NetworkManager.room.send_message("draw")
 
 func _add_hand_card(hand_card) -> void:
@@ -53,4 +65,36 @@ func _remove_hand_card(id) -> void:
 
 func _on_hand_card_pressed(hand_card) -> void:
 	print("Hand played ", hand_card)
+	if game_over:
+		return
 	NetworkManager.room.send_message("play_card", { "id": hand_card.id })
+
+func _on_special_pressed() -> void:
+	print("Special played")
+	if game_over:
+		return
+	NetworkManager.room.send_message("special")
+
+func _on_timeout() -> void:
+	if time_left > 0:
+		time_left -= 1
+		update_label()
+		if time_left <= 0:
+			timer.stop()
+			print("Timer over")
+			game_over = true
+
+func update_label() -> void:
+	timer_label.text = "Time: " + str(time_left) + "s"
+
+func pause_timer() -> void:
+	timer.paused = true
+
+func resume_timer() -> void:
+	timer.paused = false
+
+func reset_timer(new_time: int = total_seconds) -> void:
+	timer.stop()
+	time_left = new_time
+	update_label()
+	timer.start()
