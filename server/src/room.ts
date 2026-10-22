@@ -1,7 +1,7 @@
 import { Room, Client } from "colyseus";
 import * as crypto from "node:crypto";
 import { Enemy, GameState, Player, enemiesToWin, maxHandCards } from "./state";
-import { CardType, GameStatus } from "./types";
+import { GameStatus } from "./types";
 import { ENEMY_TEMPLATES, HEROES_MAP } from "./data";
  
 export class GameRoom extends Room {
@@ -117,18 +117,33 @@ export class GameRoom extends Room {
       console.error(`Player ${player.name} doesn't have card ${message.id} on hand`);
       return;
     }
-    if (enemy.play(handCard.type as CardType)) {
-      if (this.state.frozen) {
-        console.log("Enemy damaged -> unfrozen");
-        this.state.frozen = false;
-        this.broadcast("unfrozen");
+    if (player.blockers.length > 0) {
+      for (const blocker of player.blockers) {
+        if (blocker.play(handCard)) {
+          player.cleanMetBlocker();
+          player.playedHandCard(handCard);
+          client.send("played_card", message);
+          return;
+        }
       }
-      console.log(`Player ${player.name} played ${handCard.type}`);
-      player.playedHandCard(handCard);
-      client.send("played_card", message);
-      client.send("updated_enemy", this.state.currentEnemy);
+      player.cleanMetBlocker();
+    }
+    if (player.blockers.length == 0) {
+      if (enemy.play(handCard)) {
+        if (this.state.frozen) {
+          console.log("Enemy damaged -> unfrozen");
+          this.state.frozen = false;
+          this.broadcast("unfrozen");
+        }
+        console.log(`Player ${player.name} played ${handCard.type}`);
+        player.playedHandCard(handCard);
+        client.send("played_card", message);
+        client.send("updated_enemy", this.state.currentEnemy);
+      } else {
+        console.log(`Player ${player.name} played illegal card ${handCard.type}`);
+      }
     } else {
-      console.log(`Player ${player.name} played illegal card ${handCard.type}`);
+      console.log(`Player ${player.name} has still blocker`);
     }
     if (enemy.isDefeated()) {
       console.log(`Enemy ${enemy.name} defeated!`);
@@ -136,10 +151,11 @@ export class GameRoom extends Room {
       this.state.enemiesBeaten += 1;
       if (this.state.enemiesBeaten < enemiesToWin) {
         this.spawnEnemy();
+        client.send("updated_enemy", this.state.currentEnemy);
       } else {
         console.log("Game over - all enemies defeated");
         this.state.status = GameStatus.FINISHED;
-        this.broadcast("game_over");
+        this.broadcast("game_over", { message: "You won!" });
       }
     }
   }
@@ -221,7 +237,7 @@ export class GameRoom extends Room {
         && this.state.isTimeOver()) {
       console.log("Game is over - time ran out");
       this.state.status = GameStatus.FINISHED;
-      this.broadcast("game_over");
+      this.broadcast("game_over", { message: "Time ran out" });
     }
   }
 

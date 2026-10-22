@@ -10,10 +10,10 @@ const Enemy = preload("res://scenes/game/enemy.tscn")
 @onready var special_card = $SpecialCard
 @onready var timer_label: Label = $TimerLabel
 @onready var timer: Timer = $Timer
+@onready var status: Label = $CenterContainer/Status
 
 var hand_card_ui_nodes = {}
 var enemy
-var total_seconds = 5*60
 var time_left: int
 var game_over = false
 
@@ -30,7 +30,7 @@ func _ready() -> void:
 	enemy.setup(current_enemy)
 	special_card.pressed.connect(_on_special_pressed)
 	# timer
-	time_left = total_seconds
+	time_left = NetworkManager.room.state.gameDuration / 1000
 	timer.timeout.connect(_on_timeout)
 	update_label()
 	NetworkManager.room.state_changed.connect(_state_changed)
@@ -53,6 +53,8 @@ func _message_received(type, message) -> void:
 		timer.start()
 	if type == "game_over":
 		game_over = true
+		status.text = message.message
+		timer.stop()
 
 func _on_draw_pressed() -> void:
 	print("Draw card pressed")
@@ -96,12 +98,6 @@ func _on_timeout() -> void:
 
 func update_label() -> void:
 	timer_label.text = "Time: " + str(time_left) + "s"
-
-func reset_timer(new_time: int = total_seconds) -> void:
-	timer.stop()
-	time_left = new_time
-	update_label()
-	timer.start()
 
 func _state_changed() -> void:
 	print("State changed")

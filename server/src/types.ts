@@ -3,11 +3,13 @@ export enum CardType {
   SHIELD = "SHIELD",
   MAGIC = "MAGIC",
   JUMP = "JUMP",
+  ANY = "ANY",
 }
 
 export interface ICardCount {
   type: CardType;
   count: number;
+  all?: boolean;
 }
 
 export interface IEnemy {

@@ -1,9 +1,12 @@
 [gd_scene format=3 uid="uid://bx0nsihun03rn"]
 
 [ext_resource type="PackedScene" uid="uid://crq8kha8vc0nk" path="res://scenes/game/cards/card.tscn" id="1_6cw85"]
+[ext_resource type="Texture2D" uid="uid://0tumufm0kdwv" path="res://SHIELD1.jpg" id="2_lr0om"]
 
 [node name="Card" unique_id=228351307 instance=ExtResource("1_6cw85")]
+texture_normal = ExtResource("2_lr0om")
 card_text = "Shield"
 
 [node name="Label" parent="." index="1" unique_id=355846517]
+visible = false
 text = "Shield"

@@ -53,10 +53,10 @@ export const HEROES: IHero[] = [
   {
     name: "Mage",
     cardCounts: cardCounts({
-      ATTACK: 5,
-      SHIELD: 5,
-      MAGIC: 25,
-      JUMP: 5,
+      ATTACK: 10,
+      SHIELD: 10,
+      MAGIC: 20,
+      JUMP: 10,
     })
   },
   {
@@ -65,13 +65,20 @@ export const HEROES: IHero[] = [
       ATTACK: 15,
       SHIELD: 15,
       MAGIC: 5,
-      JUMP: 5,
+      JUMP: 15,
     })
   }
 ];
+
 export const HEROES_MAP: Record<string, IHero> = HEROES.reduce(
   (acc: Record<string, IHero>, hero: IHero) => {
     acc[hero.name] = hero;
     return acc;
   },
   {});
+
+export interface ICardId {
+  id: number;
+  type: CardType;
+  count?: number | "ALL";
+}

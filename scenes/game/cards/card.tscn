@@ -10,9 +10,11 @@ Panel/styles/panel = SubResource("StyleBoxFlat_nq1oy")
 
 [node name="Card" type="TextureButton" unique_id=228351307]
 custom_minimum_size = Vector2(100, 160)
+custom_maximum_size = Vector2(100, 160)
 offset_right = 100.0
 offset_bottom = 160.0
 theme = SubResource("Theme_bq3w6")
+stretch_mode = 0
 script = ExtResource("1_bq3w6")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=819121943]
